@@ -1,0 +1,99 @@
+{
+ "device": "itel S665L, Unisoc T606 (ums9230)",
+ "runtime": "Termux, ONNX Runtime 1.31.1, Python 3.14.10",
+ "model": "tea_screener.onnx",
+ "model_bytes": 6094012,
+ "sha256_prefix": "59c35c459064f120",
+ "single_thread": {
+  "latency_ms": {
+   "median": 32.84,
+   "p95": 33.2,
+   "mean": 32.86,
+   "runs": 100,
+   "warmup": 15
+  },
+  "fps_median": 30.4,
+  "model_rss_increase_mb": 29.4,
+  "peak_rss_mb": 75.4
+ },
+ "all_cores": {
+  "latency_ms": {
+   "median": 19.14,
+   "p95": 22.94,
+   "mean": 19.75,
+   "runs": 100,
+   "warmup": 15
+  },
+  "fps_median": 52.2,
+  "model_rss_increase_mb": 26.3,
+  "peak_rss_mb": 72.3
+ },
+ "energy": {
+  "mj_per_leaf_above_idle": {
+   "mean": 28.34,
+   "sd": 1.52
+  },
+  "estimator": "(load power - median idle power over all cycles) x ms per leaf",
+  "per_cycle_differencing": {
+   "mean": 24.85,
+   "sd": 8.0,
+   "note": "cycle 5 idle raised to 1.33 W by background activity"
+  },
+  "median_idle_w": 0.866,
+  "cycles": [
+   {
+    "idle_w": 0.983,
+    "load_w": 1.745,
+    "leaves": 3621,
+    "ms_per_leaf": 33.15,
+    "mj_per_leaf_above_idle": 25.28,
+    "samples_idle": 225,
+    "samples_load": 469
+   },
+   {
+    "idle_w": 0.866,
+    "load_w": 1.675,
+    "leaves": 3624,
+    "ms_per_leaf": 33.11,
+    "mj_per_leaf_above_idle": 26.8,
+    "samples_idle": 226,
+    "samples_load": 468
+   },
+   {
+    "idle_w": 0.858,
+    "load_w": 1.767,
+    "leaves": 3620,
+    "ms_per_leaf": 33.15,
+    "mj_per_leaf_above_idle": 30.14,
+    "samples_idle": 225,
+    "samples_load": 470
+   },
+   {
+    "idle_w": 0.818,
+    "load_w": 1.753,
+    "leaves": 3633,
+    "ms_per_leaf": 33.03,
+    "mj_per_leaf_above_idle": 30.9,
+    "samples_idle": 225,
+    "samples_load": 469
+   },
+   {
+    "idle_w": 1.334,
+    "load_w": 1.671,
+    "leaves": 3629,
+    "ms_per_leaf": 33.07,
+    "mj_per_leaf_above_idle": 11.15,
+    "samples_idle": 225,
+    "samples_load": 468
+   }
+  ],
+  "threads": 1,
+  "onnxruntime": "1.32.0",
+  "current_source": "battery/current_now",
+  "voltage_source": "battery/voltage_now",
+  "script": "deploy/energy_adb.py",
+  "date": "2026-11-16",
+  "rejected_run": "first attempt (3 cycles) discarded: cycle 2 ran at 62 ms/leaf with half the sensor readings (device throttled/screen off) and cycle 3 was disturbed by input"
+ },
+ "script": "deploy/benchmark_onnx.py v3"
+}

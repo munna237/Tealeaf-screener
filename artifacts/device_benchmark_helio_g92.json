@@ -1,0 +1,88 @@
+{
+ "device": "MediaTek Helio G92 handset (Termux, ONNX Runtime 1.26.0, Python 3.13)",
+ "model": "tea_screener.onnx",
+ "model_bytes": 6094012,
+ "sha256_prefix": "59c35c459064f120",
+ "single_thread": {
+  "latency_ms": {
+   "median": 26.89,
+   "p95": 28.48,
+   "mean": 27.09,
+   "runs": 100,
+   "warmup": 15
+  },
+  "fps_median": 37.2,
+  "model_rss_increase_mb": 28.5,
+  "peak_rss_mb": 72.2
+ },
+ "all_cores": {
+  "latency_ms": {
+   "median": 17.79,
+   "p95": 20.08,
+   "mean": 17.93,
+   "runs": 100,
+   "warmup": 15
+  },
+  "fps_median": 56.2,
+  "model_rss_increase_mb": 28.8,
+  "peak_rss_mb": 72.8
+ },
+ "energy": {
+  "mj_per_leaf_above_idle": {
+   "mean": 36.87,
+   "sd": 1.35
+  },
+  "cycles": [
+   {
+    "idle_w": 1.419,
+    "load_w": 2.732,
+    "leaves": 4446,
+    "ms_per_leaf": 26.99,
+    "mj_per_leaf_above_idle": 35.45
+   },
+   {
+    "idle_w": 1.366,
+    "load_w": 2.744,
+    "leaves": 4466,
+    "ms_per_leaf": 26.87,
+    "mj_per_leaf_above_idle": 37.02
+   },
+   {
+    "idle_w": 1.327,
+    "load_w": 2.745,
+    "leaves": 4463,
+    "ms_per_leaf": 26.89,
+    "mj_per_leaf_above_idle": 38.13
+   }
+  ],
+  "current_source": "/sys/class/power_supply/mtk-gauge/current_now",
+  "voltage_source": "/sys/class/power_supply/battery/voltage_now",
+  "method": "deploy/energy_adb.py: adb shell over network (phone on battery), 0.2 s sampling, 3 x (60 s idle, 120 s model), median per phase after 5 s settling",
+  "onnxruntime": "1.31.1",
+  "median_idle_estimator_mj": 36.99
+ },
+ "script": "deploy/benchmark_onnx.py v3",
+ "sustained_single_thread": {
+  "seconds": 450,
+  "leaves": 16677,
+  "ms_per_leaf": 27.0,
+  "leaves_per_30s": [
+   1129,
+   1128,
+   1130,
+   1113,
+   1062,
+   1071,
+   1071,
+   1070,
+   1102,
+   1134,
+   1133,
+   1134,
+   1133,
+   1134,
+   1133
+  ],
+  "source": "deploy/energy_test.py, full run (model phase)"
+ }
+}

@@ -1,0 +1,12 @@
+{
+  "onnx": "tea_screener_field_S1_rep1.onnx",
+  "rep": 1,
+  "field_centre_auc": 0.978404867072256,
+  "field_whole_auc": 0.9749045753812818,
+  "tealeaf_auc": 0.9828204798289719,
+  "size_mb": 6.094012,
+  "max_logit_diff": 4.1961669921875e-05,
+  "sha256": "ab2522118ffb9a0cb74416cf2f1361c6b5deaa1f6f3be663bd0c04501a838d1f",
+  "preprocessing": "whole frame or centre 60% square, 224x224, ImageNet mean/std",
+  "output": "logits[:,1] = diseased"
+}

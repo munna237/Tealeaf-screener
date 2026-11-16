@@ -1,0 +1,25 @@
+{
+  "export_rep": 1,
+  "onnx": "tea_screener.onnx",
+  "opset": 13,
+  "dynamic_batch": true,
+  "size_mb": 6.094012,
+  "params_m": 1.519906,
+  "max_logit_diff_vs_torch": 5.53131103515625e-05,
+  "test_auc": 0.9859596249521623,
+  "test_acc": 0.9646220412318656,
+  "sens": 0.9837901562039493,
+  "spec": 0.8432835820895522,
+  "published_5seed_auc": [
+    0.9766744306759747,
+    0.9865243301617465,
+    0.9922596346296809,
+    0.9827987603978341,
+    0.9888032208541729
+  ],
+  "used_cached_features": true,
+  "crop_function": "original modules",
+  "preprocessing": "Otsu leaf crop + 6% pad, 224x224 (JPEG q95), ToTensor, ImageNet mean/std",
+  "output": "logits[:,1] = diseased",
+  "sha256": "59c35c459064f12027e7135f3692b7f8a3e551310af46fde3a297c676a11351c"
+}
