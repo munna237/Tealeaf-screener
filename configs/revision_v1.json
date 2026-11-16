@@ -1,0 +1,15 @@
+{
+  "RUN_TAG": "revision_v1",
+  "SEED": 42,
+  "TEST_FRAC": 0.3,
+  "N_SHOT": 10,
+  "N_REPEATS": 5,
+  "IMG_SIZE": 224,
+  "CROP_PAD": 0.06,
+  "ERODE_K": 11,
+  "DILATE_K": 11,
+  "SHIFT_FRAC": 0.12,
+  "UAHS_POOL": 200,
+  "UAHS_TOPK": 2,
+  "ATTN_TOPK": 19
+}
