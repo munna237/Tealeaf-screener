@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this code or the released artifacts, please cite the article and the dataset."
+title: "Label-Efficient Tea Leaf Disease Screening for Offline Smartphone Deployment: Exposing and Controlling Capture Bias"
+authors:
+  - family-names: Munna
+    given-names: Mohammad Mehedi Hasan
+    orcid: "https://orcid.org/0009-0000-0860-9337"
+  - family-names: Kabir
+    given-names: Acramul Haque
+  - family-names: Tulona
+    given-names: Reefka Fabliha
+  - family-names: Mulk
+    given-names: Md Mansur Ul
+type: software
+repository-code: "https://github.com/munna237/Tealeaf-screener"
+license: MIT
+references:
+  - type: dataset
+    title: "TeaLeafDiseaseBD: Annotated smartphone images and lesion-level labels of tea leaf diseases from Bangladesh"
+    doi: "10.17632/jcvxm4gh7d.3"
+    year: 2026
