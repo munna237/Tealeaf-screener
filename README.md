@@ -14,6 +14,7 @@ Dataset: **TeaLeafDiseaseBD**, Mendeley Data, doi:[10.17632/jcvxm4gh7d.3](https:
 
 | Path | Content |
 |---|---|
+| `models/tea_screener_field_S1.onnx` | field-adapted student S1 (seed 1) of Section IV-Q, same architecture and size; SHA-256 in `artifacts/export_report_field_S1.json` |
 | `models/tea_screener.onnx` | deployed binary screener: MobileNetV3-Small, 1.52 M parameters, 6.09 MB, ONNX opset 13, dynamic batch |
 | `artifacts/` | split, frozen features, per-image student scores, and every result JSON (see `artifacts/README.md`) |
 | `analysis/reconcile.py` | regenerates the in-distribution numbers (student, probe, label curve, triage, Figs. 7–8) from `artifacts/` |
@@ -22,6 +23,11 @@ Dataset: **TeaLeafDiseaseBD**, Mendeley Data, doi:[10.17632/jcvxm4gh7d.3](https:
 | `notebooks/external_test.ipynb` | external evaluation on two independently collected tea datasets (GPU, images needed) |
 | `notebooks/field_test.ipynb` | zero-shot evaluation on 2,500 field photographs from four Habiganj estates: whole frame, centre crop, SAM leaf crop (GPU, images needed) |
 | `notebooks/experiment_F_field_student.ipynb`, `notebooks/experiment_F_robustness.ipynb` | zero-label field adaptation: re-distil the student on probe-labelled field photographs (S0/S1/S2, three seeds, prevalence sensitivity) |
+| `notebooks/external_blind_transfer.ipynb` | scores the field-adapted students (S0/S1/S2, three seeds) on External datasets 1 and 2: blind transfer of the adapted model (images needed, inference only) |
+| `notebooks/regenerate_tables_8_9.ipynb` | rebuilds Table 8 (synthetic background clutter) and the shape-control column of Table 9 on the final split with the published probes (images needed) |
+| `analysis/fig_fewshot.py` | redraws Fig. 6 (label efficiency with the shape control) from `reconciled_numbers.json` and `regen_tables_8_9.json` |
+| `analysis/probe_C_cv.py` | seven-class accuracy at C = 1 / 10 / 100 and with C chosen by 5-fold CV inside the 70 labels (CPU, cached features) |
+| `notebooks/regenerate_tables_2_8_14.ipynb` | rebuilds Tables 2, 8 and 14 with the crop recipe that reproduces the cached features; times feature extraction (images needed) |
 | `analysis/field.py` | regenerates the field numbers (Section IV-Q, Table 16) from released scores and features, no images |
 | `deploy/benchmark_onnx.py` | latency, memory, and approximate energy on any device, including Android/Termux |
 | `notebooks/original/`, `scripts/original/` | the original study code (19 notebooks, 17 scripts), copied verbatim and mapped to the paper in `scripts/original/MANIFEST.md` |
@@ -62,7 +68,9 @@ Mean ± SD over five independent draws of the 70-label seed set.
 | External specificity at the in-distribution threshold | probe 0.32 / 0.53; deployed 0.62 / 0.71 | `external_results_v3.json` | `notebooks/external_test.ipynb` |
 | Deployed model, external zero-shot AUC (EWU / Allynugger) | 0.883 / 0.889 | `external_results_v3.json` | `notebooks/external_test.ipynb` |
 | EWU after 10 / 20 local labels per class (40 draws, near-duplicates held out) | AUC 0.973 ± 0.009 / 0.983 ± 0.005 | `external_results_v3.json` | `notebooks/external_test.ipynb` |
-| Capture-bias controls, shape baselines, clutter, mask perturbation | Tables 5, 7, 8, 14 | original scripts | `scripts/original/` |
+| Capture-bias controls, shape baselines, mask perturbation | Tables 5, 7, 14 | original scripts | `scripts/original/` |
+| Synthetic clutter (Table 8) and shape control (Table 9), final split | 0.986 / 0.979 / 0.962 / 0.941; shape 0.725 at 70 labels | `regen_tables_8_9.json` | `notebooks/regenerate_tables_8_9.ipynb` |
+| Blind transfer of the field-adapted students (Table 17) | S1 AUC 0.881 ± 0.047 / 0.931 ± 0.042 vs S0 0.795 ± 0.122 / 0.851 ± 0.118; not consistent across seeds | `external_blind_transfer.json` | `notebooks/external_blind_transfer.ipynb` |
 | Field photographs, zero-shot probe AUC (whole / centre / SAM crop) | 0.962 ± 0.017 / 0.973 ± 0.009 / 0.970 ± 0.013 | `field_results.json`, `experiment_F_results.json` | `analysis/field.py`, `notebooks/field_test.ipynb` |
 | Field photographs, deployed model AUC (whole / SAM crop) | 0.639 / 0.831 | `field_results.json` | `notebooks/field_test.ipynb` |
 | Field adaptation, held-out half, whole frame AUC: S0 (our data) / S1 (+ probe-labelled field, 0 labels) / S2 (+ 40 labels) | 0.719 ± 0.154 / 0.972 ± 0.015 / 0.989 ± 0.002 (3 seeds) | `experiment_F_robustness.json`, `experiment_F_scores.npz` | `analysis/field.py` |
