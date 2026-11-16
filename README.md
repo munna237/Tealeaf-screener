@@ -1,5 +1,7 @@
 # Label-efficient tea leaf disease screening — code, artifacts, and deployed model
 
+Repository: https://github.com/munna237/Tealeaf-screener
+
 Code and released artifacts for
 
 > M. M. H. Munna, A. H. Kabir, R. F. Tulona, M. M. U. Mulk, "Label-Efficient Tea Leaf Disease Screening for
@@ -18,8 +20,11 @@ Dataset: **TeaLeafDiseaseBD**, Mendeley Data, doi:[10.17632/jcvxm4gh7d.3](https:
 | `analysis/recalibrate.py` | external label-free threshold and few-label recalibration, near-duplicate groups held out |
 | `notebooks/revision_v1_reproduce.ipynb` | rebuilds the 70-label pipeline from the artifacts, trains the student, exports and verifies the ONNX model |
 | `notebooks/external_test.ipynb` | external evaluation on two independently collected tea datasets (GPU, images needed) |
+| `notebooks/field_test.ipynb` | zero-shot evaluation on 2,500 field photographs from four Habiganj estates: whole frame, centre crop, SAM leaf crop (GPU, images needed) |
+| `notebooks/experiment_F_field_student.ipynb`, `notebooks/experiment_F_robustness.ipynb` | zero-label field adaptation: re-distil the student on probe-labelled field photographs (S0/S1/S2, three seeds, prevalence sensitivity) |
+| `analysis/field.py` | regenerates the field numbers (Section IV-Q, Table 16) from released scores and features, no images |
 | `deploy/benchmark_onnx.py` | latency, memory, and approximate energy on any device, including Android/Termux |
-| `scripts/original/`, `notebooks/original/` | the original experiment code, copied verbatim (see `scripts/original/MANIFEST.md`) |
+| `notebooks/original/`, `scripts/original/` | the original study code (19 notebooks, 17 scripts), copied verbatim and mapped to the paper in `scripts/original/MANIFEST.md` |
 | `tools/verify.py` | checksums + regeneration of every image-free number, with assertions |
 
 ## Quick start (CPU, about one minute, no images)
@@ -57,8 +62,15 @@ Mean ± SD over five independent draws of the 70-label seed set.
 | External specificity at the in-distribution threshold | probe 0.32 / 0.53; deployed 0.62 / 0.71 | `external_results_v3.json` | `notebooks/external_test.ipynb` |
 | Deployed model, external zero-shot AUC (EWU / Allynugger) | 0.883 / 0.889 | `external_results_v3.json` | `notebooks/external_test.ipynb` |
 | EWU after 10 / 20 local labels per class (40 draws, near-duplicates held out) | AUC 0.973 ± 0.009 / 0.983 ± 0.005 | `external_results_v3.json` | `notebooks/external_test.ipynb` |
-| Capture-bias controls, shape baselines, clutter, mask perturbation | Tables 5, 7, 8, 13 | original scripts | `scripts/original/` |
+| Capture-bias controls, shape baselines, clutter, mask perturbation | Tables 5, 7, 8, 14 | original scripts | `scripts/original/` |
+| Field photographs, zero-shot probe AUC (whole / centre / SAM crop) | 0.962 ± 0.017 / 0.973 ± 0.009 / 0.970 ± 0.013 | `field_results.json`, `experiment_F_results.json` | `analysis/field.py`, `notebooks/field_test.ipynb` |
+| Field photographs, deployed model AUC (whole / SAM crop) | 0.639 / 0.831 | `field_results.json` | `notebooks/field_test.ipynb` |
+| Field adaptation, held-out half, whole frame AUC: S0 (our data) / S1 (+ probe-labelled field, 0 labels) / S2 (+ 40 labels) | 0.719 ± 0.154 / 0.972 ± 0.015 / 0.989 ± 0.002 (3 seeds) | `experiment_F_robustness.json`, `experiment_F_scores.npz` | `analysis/field.py` |
+| S1 on our test split (in-distribution cost) | 0.983 ± 0.005 vs 0.986 ± 0.006 for S0 | `experiment_F_scores.npz` | `analysis/field.py` |
 | On-device latency (MediaTek Helio G92) | 26.9 ms single-thread (p95 28.5), 17.8 ms all cores (p95 20.1); +28.5 MB memory | `device_benchmark_helio_g92.json` | `deploy/benchmark_onnx.py` |
+| On-device energy (Helio G92) | 36.9 ± 1.4 mJ per leaf above idle (≈0.01 Wh per 1,000 leaves) | `device_benchmark_helio_g92.json` | `deploy/energy_adb.py` |
+| On-device latency (Unisoc T606, itel S665L) | 32.8 ms single-thread (p95 33.2), 19.1 ms all cores (p95 22.9); +29.4 MB memory | `device_benchmark_unisoc_t606.json` | `deploy/benchmark_onnx.py` |
+| On-device energy (Unisoc T606, itel S665L) | 28.3 ± 1.5 mJ per leaf above idle (5 cycles, median-idle estimator; Helio gives 37.0 by the same estimator) | `device_benchmark_unisoc_t606.json` | `deploy/energy_adb.py` |
 
 ## Using the deployed model
 
@@ -86,17 +98,23 @@ diagnostic system and does not replace expert inspection or treatment decisions.
 - On two independently collected datasets with light backdrops, disease ranking transfers (AUC 0.87–0.92)
   but the in-distribution threshold does not: specificity falls to 0.32–0.53. A new site should either
   follow the dark-backdrop capture protocol or recalibrate with about ten labelled leaves per class.
-- Not validated on in-canopy photographs or prospectively in a plantation. Garden identifiers were not
-  retained, so estate-held-out evaluation within TeaLeafDiseaseBD is not possible.
+- On 2,500 field photographs from four estates outside our collection (Chowdhury & Arman, 2025), the frozen
+  probe ranks disease well (AUC 0.96–0.97) but this deployed model does not (0.64 whole frame). Re-distilling
+  the student on probe-labelled local photographs (`notebooks/experiment_F_field_student.ipynb`) restores
+  AUC 0.97 with no new labels. The adaptation and test halves share estates and season, so this is adaptation
+  to a site, not blind transfer; each photo is framed on one leaf, so dense-canopy detection is untested.
+- Not validated prospectively in a plantation. Garden identifiers were not retained, so estate-held-out
+  evaluation within TeaLeafDiseaseBD is not possible.
 - Seven-class identification (0.685 at 70 labels) is not adequate for unsupervised treatment decisions.
 
 ## Citation
 
 See `CITATION.cff`. Please also cite the TeaLeafDiseaseBD dataset and, for the external evaluation, the
-original EWU and Allynugger datasets.
+original EWU and Allynugger datasets and, for the field evaluation, Chowdhury & Arman (2025),
+Tea Leaf Disease Image Dataset, Mendeley Data, doi:[10.17632/3x42rbj8yv.1](https://doi.org/10.17632/3x42rbj8yv.1).
 
 ## Licence
 
 Code: MIT (see `LICENSE`). The dataset is distributed under its own licence on Mendeley Data.
-External-dataset features in `artifacts/` are derived from third-party data and remain subject to those
+External- and field-dataset features in `artifacts/` are derived from third-party data and remain subject to those
 datasets' licences.
