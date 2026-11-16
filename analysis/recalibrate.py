@@ -1,8 +1,8 @@
 """Follow-ups for the external test (CPU only, cached DINO features).
-A. reproduce fixed-threshold zero-shot numbers (check against external_results.json)
+A. reproduce fixed-threshold zero-shot numbers (check against external_results_v3.json)
 B. label-free threshold: tau = quantile of external scores at the healthy prevalence pi
    (same rule as the paper's pseudo-labelling); also pi misestimated by +/-10 points
-C. local recalibration: n labelled leaves per TARGET class (1,2,5,10), refit, test on the rest
+C. local recalibration: n labelled leaves per TARGET class (1,2,5,10,20; 40 draws), refit, test on the rest
    C1 target-only multinomial probe; C2 pooled binary probe (source 70 labels + target labels)
 Outputs: recalibration_results.json (+ printed tables)."""
 import numpy as np, json, sys, warnings
@@ -11,8 +11,9 @@ from sklearn.metrics import roc_auc_score
 warnings.filterwarnings('ignore')
 D = sys.argv[1] if len(sys.argv) > 1 else '.'
 F = np.load(f'{D}/features_dinov1_crop.npz'); Xtr, ytr, Xte, dte = F['Xtr'], F['ytr'], F['Xte'], F['dte']
-J = json.load(open(f'{D}/E_distillation_5rep.json')); EXT = json.load(open(f'{D}/external_results.json'))
+J = json.load(open(f'{D}/E_distillation_5rep.json')); EXT = json.load(open(f'{D}/external_results_v3.json'))
 SEED, R, H, TS = 42, 5, 3, 0.95
+RECAL_DRAWS = 40                 # as in notebooks/external_test.ipynb (final run)
 DUP = float(sys.argv[2]) if len(sys.argv) > 2 else 0.95
 EXTS = {'EWU': np.load(f'{D}/feat_EWU_box.npz'), 'Allynugger': np.load(f'{D}/feat_Ally_whole.npz')}
 ms = lambda a: [float(np.mean(a)), float(np.std(a, ddof=1))]
@@ -55,9 +56,9 @@ for name, E in EXTS.items():
                                largest=int(np.bincount(grp).max()), singletons=int((np.bincount(grp) == 1).sum()))
     classes = np.unique(cls); K = len(classes); cid = np.searchsorted(classes, cls); hk = int(np.where(classes == 'Healthy')[0][0])
     rc = {}
-    for n in (1, 2, 5, 10):
+    for n in (1, 2, 5, 10, 20):
         r1, r2 = {'auc': [], 'spec95': []}, {'auc': [], 'spec95': []}
-        for rep in range(R):
+        for rep in range(RECAL_DRAWS):
             g = np.random.default_rng(7000 + 100 * n + rep)
             lab = np.concatenate([g.choice(np.where(cid == k)[0], n, replace=False) for k in range(K)])
             # group-aware: drop every image in the same near-duplicate cluster as a labelled one
