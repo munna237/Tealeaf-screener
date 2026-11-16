@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+results/
+*.onnx.data
+.DS_Store
+# raw images are distributed via Mendeley Data, never commit them
+data/
+*.jpg
+*.jpeg
+*.JPG
