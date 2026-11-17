@@ -22,7 +22,7 @@ for line in open(os.path.join(ART, 'CHECKSUMS.sha256')):
     check(os.path.exists(p) and hashlib.sha256(open(p, 'rb').read()).hexdigest() == h, rel)
 
 print('[2] regenerate (no images needed)')
-for script, args in (('reconcile.py', [ART]), ('recalibrate.py', [ART, '0.95']), ('field.py', [ART]), ('probe_C_cv.py', [ART]), ('ten_draws.py', [ART])):
+for script, args in (('reconcile.py', [ART]), ('recalibrate.py', [ART, '0.95']), ('field.py', [ART]), ('probe_C_cv.py', [ART]), ('ten_draws.py', [ART]), ('random_seed_set.py', [ART])):
     r = subprocess.run([sys.executable, os.path.join(ROOT, 'analysis', script), *args],
                        cwd=RES, capture_output=True, text=True)
     check(r.returncode == 0, f'{script} ran' + ('' if r.returncode == 0 else '\n' + r.stderr[-2000:]))
@@ -88,6 +88,8 @@ check(near(t6['shape_only_auc'], 0.904, 1e-3) and near(t6['collapse'], 0.338, 1e
 check(all(near(S_[k]['shape_only_auc'], v, 2e-3) for k, v in (('PlantVillage', 0.768), ('PlantDoc (field)', 0.753), ('RoCoLe', 0.725), ('RiceLeafBD', 0.615))), 'Table 6: SAM shape-only 0.768 / 0.753 / 0.725 / 0.615 on the external datasets')
 sf = json.load(open(os.path.join(ART, 'sam_confound_followup.json')))['results']
 check([sf[k]['primary']['algorithm2'] for k in ('TeaLeafDiseaseBD', 'PlantVillage', 'PlantDoc (field)', 'RoCoLe', 'RiceLeafBD')] == ['Confound present', 'Inconclusive; report both', 'Inconclusive; report both', 'Signal is pathology', 'Signal is pathology'], 'Table 6: Algorithm 2 verdicts')
+rs = json.load(open(os.path.join(RES, 'random_seed_set.json')))
+check(near(rs['random_100draws']['auc_mean'], 0.981, 1e-3) and near(rs['random_100draws']['auc_p5'], 0.964, 1e-3) and near(rs['stratified_10draws']['auc_mean'], 0.980, 1e-3), 'Sec. IV-N: 70 random (unstratified) labels AUC 0.981, 5th pct 0.964, vs stratified 0.980')
 c7 = json.load(open(os.path.join(ART, 'controls_70labels.json')))
 check(near(c7['feat_resid']['mean'], 0.971, 1e-3) and near(c7['feat_pairs']['mean'], 0.970, 1e-3) and near(c7['shape_pairs']['mean'], 0.510, 1e-3) and c7['n_pairs'] == 510, 'Table 8, 70 labels: residualised 0.971, matched pairs 0.970 (shape 0.510, 510 pairs)')
 fr = json.load(open(os.path.join(ART, 'export_report_field_S1.json')))

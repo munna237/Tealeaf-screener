@@ -79,6 +79,7 @@ marked ✓ without images.
 | Table 9 | Simulated clutter, α = 0 / 0.2 / 0.4 / 0.6 ✓ | 0.985 / 0.979 / 0.962 / 0.944 | `regen_tables_2_8_14.json` | `notebooks/regenerate_tables_2_8_14.ipynb` |
 | Table 10, Fig. 6 | Label efficiency at 70 labels; shape control ✓ | probe 0.985 ± 0.004, 7-class 0.685 ± 0.018; shape 0.725 ± 0.029 (all labels 0.792) | `reconciled_numbers.json`, `regen_tables_8_9.json` | `analysis/reconcile.py` |
 | Sec. IV-J | 7-class accuracy vs C ✓ | 0.685 / 0.743 / 0.752 at C = 1 / 10 / 100; C by CV 0.743 | `probe_C_cv.json` | `analysis/probe_C_cv.py` |
+| Sec. IV-N | Seed set drawn without class stratification (70 random leaves) ✓ | AUC 0.981 ± 0.010 (100 draws; 5th pct 0.964) vs stratified 0.980 ± 0.010; 7-class 0.51 (0.69 with balanced class weights) | `features_dinov1_crop.npz` | `analysis/random_seed_set.py` |
 | Table 11 | Triage at 10% prevalence, 95% sensitivity ✓ | 84.7% of leaves cleared, NPV 0.994 | student scores | `analysis/reconcile.py` |
 | Tables 13, 14 | On-device, Helio 55 (MediaTek Helio G92) / itel S665L (Unisoc T606) | 26.9 / 32.8 ms per 224×224 crop (one thread; segmentation not included); +28.5 / +29.4 MB; 36.9 ± 1.4 / 28.3 ± 1.5 mJ per leaf | `device_benchmark_*.json` | `deploy/benchmark_onnx.py`, `deploy/energy_adb.py` |
 | Table 15 | Mask perturbation ✓ | clean 0.985; shift 0.976; jitter 0.980 | `regen_tables_2_8_14.json` | `notebooks/regenerate_tables_2_8_14.ipynb` |
