@@ -5,7 +5,7 @@ Repository: https://github.com/munna237/Tealeaf-screener
 Code and released artifacts for
 
 > M. M. H. Munna, A. H. Kabir, R. F. Tulona, M. M. U. Mulk, "Label-Efficient Tea Leaf Disease Screening for
-> Offline Smartphone Deployment: Exposing and Controlling Capture Bias," manuscript under revision, IEEE Access.
+> Offline Smartphone Deployment: Exposing and Controlling Capture Bias," manuscript under revision.
 
 Dataset: **TeaLeafDiseaseBD**, Mendeley Data, doi:[10.17632/jcvxm4gh7d.3](https://doi.org/10.17632/jcvxm4gh7d.3)
 (13,084 images, 7 classes, eleven gardens in Sylhet, Moulvibazar and Habiganj, Bangladesh).
