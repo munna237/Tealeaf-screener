@@ -1,0 +1,150 @@
+{
+ "instrument_valid": false,
+ "criteria": {
+  "area_ratio": 1.5,
+  "shape_only": 0.75,
+  "collapse": 0.2
+ },
+ "rows": [
+  {
+   "dataset": "TeaLeafDiseaseBD",
+   "n_sampled": 1400,
+   "n_scored": 1368,
+   "mask_rate": 0.9771428571428571,
+   "contact_sheet": "/content/drive/MyDrive/TeaLeaf_DINOv2_Study/results_revision_v1/sam_contact_TeaLeafDiseaseBD.png",
+   "minutes": 7.295122039318085,
+   "scored": true,
+   "healthy_area": 0.18445114907587548,
+   "diseased_area": 0.15083136469660022,
+   "area_ratio": 1.222896507280843,
+   "area_auc": 0.7481506849315068,
+   "shape_only_auc": 0.9033147169949745,
+   "naive_attention_auc": 0.9038227739726027,
+   "within_leaf_attention_auc": 0.5901028277634961,
+   "attention_collapse": 0.3137199462091066,
+   "median_mask_area": 0.10977525129701686,
+   "iou_with_otsu": {
+    "median": 0.9451255107997665,
+    "p10": 0.09866470025510203,
+    "n": 1367
+   }
+  },
+  {
+   "dataset": "PlantVillage",
+   "n_sampled": 2952,
+   "n_scored": 2952,
+   "mask_rate": 1.0,
+   "contact_sheet": "/content/drive/MyDrive/TeaLeaf_DINOv2_Study/results_revision_v1/sam_contact_PlantVillage.png",
+   "minutes": 50.67196927467982,
+   "scored": true,
+   "healthy_area": 0.46167780005413556,
+   "diseased_area": 0.39381260553995767,
+   "area_ratio": 1.1723286496152852,
+   "area_auc": 0.6730091334541063,
+   "shape_only_auc": 0.7599909398034399,
+   "naive_attention_auc": 0.6109673158212561,
+   "within_leaf_attention_auc": 0.6134382548309179,
+   "attention_collapse": -0.0024709390096617767,
+   "median_mask_area": 0.4188690185546875,
+   "iou_with_otsu": null
+  },
+  {
+   "dataset": "RiceLeafBD",
+   "n_sampled": 1200,
+   "n_scored": 1183,
+   "mask_rate": 0.9858333333333333,
+   "contact_sheet": "/content/drive/MyDrive/TeaLeaf_DINOv2_Study/results_revision_v1/sam_contact_RiceLeafBD.png",
+   "minutes": 19.62821878194809,
+   "scored": true,
+   "healthy_area": 0.3061287062508719,
+   "diseased_area": 0.2926882740936743,
+   "area_ratio": 1.0459206375753065,
+   "area_auc": 0.5265724830965821,
+   "shape_only_auc": 0.5889100822095745,
+   "naive_attention_auc": 0.7317060562826956,
+   "within_leaf_attention_auc": 0.739646058618914,
+   "attention_collapse": -0.007940002336218388,
+   "median_mask_area": 0.2770509719848633,
+   "iou_with_otsu": null
+  },
+  {
+   "dataset": "RoCoLe",
+   "n_sampled": 400,
+   "n_scored": 399,
+   "mask_rate": 0.9975,
+   "contact_sheet": "/content/drive/MyDrive/TeaLeaf_DINOv2_Study/results_revision_v1/sam_contact_RoCoLe.png",
+   "minutes": 5.603447989622752,
+   "scored": true,
+   "healthy_area": 0.25774060222172057,
+   "diseased_area": 0.2725087568495009,
+   "area_ratio": 0.945806678660472,
+   "area_auc": 0.5593969849246231,
+   "shape_only_auc": 0.7140496794871795,
+   "naive_attention_auc": 0.730603015075377,
+   "within_leaf_attention_auc": 0.8049497487437187,
+   "attention_collapse": -0.07434673366834177,
+   "median_mask_area": 0.2517954508463542,
+   "iou_with_otsu": null
+  },
+  {
+   "dataset": "PlantDoc (field)",
+   "n_sampled": 1630,
+   "n_scored": 1560,
+   "mask_rate": 0.9570552147239264,
+   "contact_sheet": "/content/drive/MyDrive/TeaLeaf_DINOv2_Study/results_revision_v1/sam_contact_PlantDoc.png",
+   "minutes": 29.269785185654957,
+   "scored": true,
+   "healthy_area": 0.2633277156062218,
+   "diseased_area": 0.3806378535974255,
+   "area_ratio": 0.6918064325907151,
+   "area_auc": 0.6390193739459504,
+   "shape_only_auc": 0.7366747562831641,
+   "naive_attention_auc": 0.6460433548599399,
+   "within_leaf_attention_auc": 0.5725902273632489,
+   "attention_collapse": 0.07345312749669097,
+   "median_mask_area": 0.26765040631163706,
+   "iou_with_otsu": null
+  }
+ ],
+ "otsu_published": {
+  "TeaLeafDiseaseBD": [
+   1.936,
+   0.834,
+   0.928,
+   0.543
+  ],
+  "PlantVillage": [
+   1.018,
+   0.574,
+   0.611,
+   0.574
+  ],
+  "RiceLeafBD": [
+   1.06,
+   0.623,
+   0.73,
+   0.719
+  ],
+  "RoCoLe": [
+   0.922,
+   0.572,
+   0.727,
+   0.75
+  ],
+  "PlantDoc (field)": [
+   1.074,
+   0.6,
+   0.644,
+   0.657
+  ]
+ },
+ "sam": {
+  "model": "vit_b",
+  "prompt": "centre point",
+  "max_side": 1024,
+  "area": [
+   0.03,
+   0.9
+  ]
+ }
+}

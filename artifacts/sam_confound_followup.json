@@ -1,0 +1,597 @@
+{
+ "results": {
+  "TeaLeafDiseaseBD": {
+   "mask_rate": 0.9778571428571429,
+   "n_sampled": 1400,
+   "excluded_by_qc": {
+    "qc_sam_defaults": {
+     "healthy": 0.18500000000000005,
+     "diseased": 0.23866552609067582
+    },
+    "qc_plus_border": {
+     "healthy": 0.31000000000000005,
+     "diseased": 0.2805816937553465
+    }
+   },
+   "border_touch_rate": {
+    "healthy": 0.14,
+    "diseased": 0.08126603934987169
+   },
+   "primary": {
+    "subset": "all masks (pre-specified)",
+    "n": 1369,
+    "n_healthy": 200,
+    "n_diseased": 1169,
+    "area_ratio_mean": 1.2816282955514056,
+    "area_ratio_mean_ci": [
+     1.1704111860563309,
+     1.40853209667034
+    ],
+    "area_ratio_median": 1.680550781353288,
+    "area_ratio_median_ci": [
+     1.517552840247594,
+     1.9312454192391533
+    ],
+    "area_auc": 0.7593477331052181,
+    "shape_only_auc": 0.9041299383735006,
+    "naive_attention_auc": 0.9060735671514115,
+    "within_leaf_attention_auc": 0.5679537671232877,
+    "attention_collapse": 0.3381198000281238,
+    "n_matched_pairs": 175,
+    "A_match": 0.7820734693877551,
+    "algorithm2": "Confound present"
+   },
+   "qc_sam_defaults": {
+    "subset": "SAM-default quality filter (class-blind)",
+    "n": 1053,
+    "n_healthy": 163,
+    "n_diseased": 890,
+    "area_ratio_mean": 1.3071989357143243,
+    "area_ratio_mean_ci": [
+     1.1739571049129263,
+     1.4659856186280038
+    ],
+    "area_ratio_median": 1.634029364220539,
+    "area_ratio_median_ci": [
+     1.4909441115679074,
+     1.853384408015328
+    ],
+    "area_auc": 0.7659509202453988,
+    "shape_only_auc": 0.8674838270343889,
+    "naive_attention_auc": 0.8913283242572551,
+    "within_leaf_attention_auc": 0.5419728406975943,
+    "attention_collapse": 0.34935548355966073,
+    "n_matched_pairs": 143,
+    "A_match": 0.7726050173602622,
+    "algorithm2": "Confound present"
+   },
+   "qc_plus_border": {
+    "subset": "SAM-default filter + no border contact (class-blind)",
+    "n": 979,
+    "n_healthy": 138,
+    "n_diseased": 841,
+    "area_ratio_mean": 1.5722724582075631,
+    "area_ratio_mean_ci": [
+     1.4576958949219123,
+     1.6903506648946567
+    ],
+    "area_ratio_median": 1.5646241270710668,
+    "area_ratio_median_ci": [
+     1.4557988767532677,
+     1.7205937539090188
+    ],
+    "area_auc": 0.7772277654276311,
+    "shape_only_auc": 0.881237868257099,
+    "naive_attention_auc": 0.8835582208895552,
+    "within_leaf_attention_auc": 0.548561925933585,
+    "attention_collapse": 0.33499629495597016,
+    "n_matched_pairs": 130,
+    "A_match": 0.7620118343195266,
+    "algorithm2": "Confound present"
+   },
+   "iou_with_otsu": {
+    "median": 0.9447619047619048,
+    "p10": 0.12090340351401324,
+    "frac_below_0_5": 0.17384952520087654
+   },
+   "otsu_agreement_subset": {
+    "subset": "SAM/Otsu IoU >= 0.80 (Otsu-conditioned; diagnostic only)",
+    "n": 1075,
+    "n_healthy": 160,
+    "n_diseased": 915,
+    "area_ratio_mean": 1.6222703770102973,
+    "area_ratio_mean_ci": [
+     1.512775515967649,
+     1.7399824014559697
+    ],
+    "area_ratio_median": 1.5828541071784317,
+    "area_ratio_median_ci": [
+     1.4561511643206393,
+     1.8486237532417025
+    ],
+    "area_auc": 0.7840812841530055,
+    "shape_only_auc": 0.9012978142076502,
+    "naive_attention_auc": 0.8967418032786885,
+    "within_leaf_attention_auc": 0.5470560109289617,
+    "attention_collapse": 0.34968579234972674,
+    "n_matched_pairs": 144,
+    "A_match": 0.767602237654321,
+    "algorithm2": "Confound present"
+   },
+   "gross_disagreement": {
+    "n": 238,
+    "mean_area_when_bad": 0.30376606731578826,
+    "by_class": {
+     "healthy": 0.16,
+     "diseased": 0.17621899059024806
+    }
+   },
+   "reproduces_first_run": true
+  },
+  "PlantVillage": {
+   "mask_rate": 1.0,
+   "n_sampled": 2952,
+   "excluded_by_qc": {
+    "qc_sam_defaults": {
+     "healthy": 0.5090579710144927,
+     "diseased": 0.8108333333333333
+    },
+    "qc_plus_border": {
+     "healthy": 0.7101449275362319,
+     "diseased": 0.83125
+    }
+   },
+   "border_touch_rate": {
+    "healthy": 0.35507246376811596,
+    "diseased": 0.19833333333333333
+   },
+   "primary": {
+    "subset": "all masks (pre-specified)",
+    "n": 2952,
+    "n_healthy": 552,
+    "n_diseased": 2400,
+    "area_ratio_mean": 1.1723286496152852,
+    "area_ratio_mean_ci": [
+     1.1479250989346654,
+     1.195561594984579
+    ],
+    "area_ratio_median": 1.171718908181002,
+    "area_ratio_median_ci": [
+     1.1490230141026239,
+     1.2028970138582387
+    ],
+    "area_auc": 0.6730091334541063,
+    "shape_only_auc": 0.7677941407316407,
+    "naive_attention_auc": 0.6109673158212561,
+    "within_leaf_attention_auc": 0.6134382548309179,
+    "attention_collapse": -0.0024709390096617767,
+    "n_matched_pairs": 552,
+    "A_match": 0.5364796655114472,
+    "algorithm2": "Inconclusive; report both"
+   },
+   "qc_sam_defaults": {
+    "subset": "SAM-default quality filter (class-blind)",
+    "n": 725,
+    "n_healthy": 271,
+    "n_diseased": 454,
+    "area_ratio_mean": 1.237693205150273,
+    "area_ratio_mean_ci": [
+     1.1954950143187542,
+     1.2826929293758436
+    ],
+    "area_ratio_median": 1.242820763956905,
+    "area_ratio_median_ci": [
+     1.1981028786055359,
+     1.3083551207157156
+    ],
+    "area_auc": 0.7254905148170424,
+    "shape_only_auc": 0.7647481407481408,
+    "naive_attention_auc": 0.6637758668335583,
+    "within_leaf_attention_auc": 0.6664255409073915,
+    "attention_collapse": -0.002649674073833208,
+    "n_matched_pairs": 245,
+    "A_match": 0.5748104956268222,
+    "algorithm2": "Inconclusive; report both"
+   },
+   "qc_plus_border": {
+    "subset": "SAM-default filter + no border contact (class-blind)",
+    "n": 565,
+    "n_healthy": 160,
+    "n_diseased": 405,
+    "area_ratio_mean": 1.214578231822926,
+    "area_ratio_mean_ci": [
+     1.1629934336514518,
+     1.2649804835496532
+    ],
+    "area_ratio_median": 1.2265352228383652,
+    "area_ratio_median_ci": [
+     1.1608639856425527,
+     1.2735837729929633
+    ],
+    "area_auc": 0.7003626543209877,
+    "shape_only_auc": 0.7611496913580247,
+    "naive_attention_auc": 0.6995524691358026,
+    "within_leaf_attention_auc": 0.662746913580247,
+    "attention_collapse": 0.03680555555555565,
+    "n_matched_pairs": 160,
+    "A_match": 0.61375,
+    "algorithm2": "Inconclusive; report both"
+   },
+   "species": {
+    "per_species": {
+     "pepper": {
+      "n_healthy": 200,
+      "n_diseased": 200,
+      "shape_only_auc": 0.667
+     },
+     "potato": {
+      "n_healthy": 152,
+      "n_diseased": 400,
+      "shape_only_auc": 0.8229005376344085
+     },
+     "tomato": {
+      "n_healthy": 200,
+      "n_diseased": 1800,
+      "shape_only_auc": 0.7285972222222222
+     }
+    },
+    "n_species_with_both": 3,
+    "shape_only_auc_same_images": 0.7677941407316407,
+    "species_only_auc": 0.7124333538083538,
+    "shape_only_auc_species_centred": 0.7732299686049686,
+    "weighted_within_species_auc": 0.737884668434498
+   },
+   "reproduces_first_run": true
+  },
+  "RiceLeafBD": {
+   "mask_rate": 0.9858333333333333,
+   "n_sampled": 1200,
+   "excluded_by_qc": {
+    "qc_sam_defaults": {
+     "healthy": 0.33163265306122447,
+     "diseased": 0.3880445795339412
+    },
+    "qc_plus_border": {
+     "healthy": 0.9897959183673469,
+     "diseased": 0.9989868287740629
+    }
+   },
+   "border_touch_rate": {
+    "healthy": 0.9846938775510204,
+    "diseased": 0.9787234042553191
+   },
+   "primary": {
+    "subset": "all masks (pre-specified)",
+    "n": 1183,
+    "n_healthy": 196,
+    "n_diseased": 987,
+    "area_ratio_mean": 1.0459206375753065,
+    "area_ratio_mean_ci": [
+     0.9645368948700282,
+     1.1275799790548604
+    ],
+    "area_ratio_median": 1.091361838596394,
+    "area_ratio_median_ci": [
+     0.943313926359743,
+     1.2098637045162348
+    ],
+    "area_auc": 0.5265724830965821,
+    "shape_only_auc": 0.614568363578516,
+    "naive_attention_auc": 0.7317060562826956,
+    "within_leaf_attention_auc": 0.739646058618914,
+    "attention_collapse": -0.007940002336218388,
+    "n_matched_pairs": 193,
+    "A_match": 0.7191602459126418,
+    "algorithm2": "Signal is pathology"
+   },
+   "qc_sam_defaults": {
+    "subset": "SAM-default quality filter (class-blind)",
+    "n": 735,
+    "n_healthy": 131,
+    "n_diseased": 604,
+    "area_ratio_mean": 1.007284427125438,
+    "area_ratio_mean_ci": [
+     0.9364161392652793,
+     1.087466334609437
+    ],
+    "area_ratio_median": 1.0400355423810517,
+    "area_ratio_median_ci": [
+     0.9377795606548996,
+     1.1733679489552094
+    ],
+    "area_auc": 0.5113429553612051,
+    "shape_only_auc": 0.6318335844850995,
+    "naive_attention_auc": 0.7551691016632123,
+    "within_leaf_attention_auc": 0.7839647914274781,
+    "attention_collapse": -0.02879568976426583,
+    "n_matched_pairs": 125,
+    "A_match": 0.7656959999999999,
+    "algorithm2": "Signal is pathology"
+   },
+   "qc_plus_border": {
+    "subset": "SAM-default filter + no border contact (class-blind)",
+    "n": 3,
+    "n_healthy": 2,
+    "n_diseased": 1,
+    "area_ratio_mean": 3.4760892976685973,
+    "area_ratio_mean_ci": [
+     3.0674971621503624,
+     3.8846814331868322
+    ],
+    "area_ratio_median": 3.4760892976685973,
+    "area_ratio_median_ci": [
+     3.0674971621503624,
+     3.8846814331868322
+    ],
+    "area_auc": 1.0,
+    "shape_only_auc": NaN,
+    "naive_attention_auc": 1.0,
+    "within_leaf_attention_auc": 1.0,
+    "attention_collapse": 0.0,
+    "n_matched_pairs": 0,
+    "algorithm2": "Inconclusive; report both"
+   },
+   "reproduces_first_run": false
+  },
+  "RoCoLe": {
+   "mask_rate": 0.9975,
+   "n_sampled": 400,
+   "excluded_by_qc": {
+    "qc_sam_defaults": {
+     "healthy": 0.6934673366834171,
+     "diseased": 0.795
+    },
+    "qc_plus_border": {
+     "healthy": 0.8140703517587939,
+     "diseased": 0.83
+    }
+   },
+   "border_touch_rate": {
+    "healthy": 0.49246231155778897,
+    "diseased": 0.36
+   },
+   "primary": {
+    "subset": "all masks (pre-specified)",
+    "n": 399,
+    "n_healthy": 199,
+    "n_diseased": 200,
+    "area_ratio_mean": 0.9458066786604722,
+    "area_ratio_mean_ci": [
+     0.8646050475951911,
+     1.0317212751297675
+    ],
+    "area_ratio_median": 0.8641133512502257,
+    "area_ratio_median_ci": [
+     0.7577105087990251,
+     0.9631013095320355
+    ],
+    "area_auc": 0.5593969849246231,
+    "shape_only_auc": 0.7251810897435897,
+    "naive_attention_auc": 0.730603015075377,
+    "within_leaf_attention_auc": 0.8049497487437187,
+    "attention_collapse": -0.07434673366834177,
+    "n_matched_pairs": 121,
+    "A_match": 0.7864216925073425,
+    "algorithm2": "Signal is pathology"
+   },
+   "qc_sam_defaults": {
+    "subset": "SAM-default quality filter (class-blind)",
+    "n": 102,
+    "n_healthy": 61,
+    "n_diseased": 41,
+    "area_ratio_mean": 0.8658780965687194,
+    "area_ratio_mean_ci": [
+     0.7515938396567623,
+     0.9912528508717552
+    ],
+    "area_ratio_median": 0.8272625289040499,
+    "area_ratio_median_ci": [
+     0.7276100057233276,
+     0.9913839277876829
+    ],
+    "area_auc": 0.630547780887645,
+    "shape_only_auc": 0.7612179487179487,
+    "naive_attention_auc": 0.6889244302279088,
+    "within_leaf_attention_auc": 0.788484606157537,
+    "attention_collapse": -0.09956017592962818,
+    "n_matched_pairs": 23,
+    "A_match": 0.667296786389414,
+    "algorithm2": "Inconclusive; report both"
+   },
+   "qc_plus_border": {
+    "subset": "SAM-default filter + no border contact (class-blind)",
+    "n": 71,
+    "n_healthy": 37,
+    "n_diseased": 34,
+    "area_ratio_mean": 0.7578215037922468,
+    "area_ratio_mean_ci": [
+     0.6644550453352949,
+     0.8725872360121647
+    ],
+    "area_ratio_median": 0.8175260227547809,
+    "area_ratio_median_ci": [
+     0.6595524713494756,
+     0.9301913871486152
+    ],
+    "area_auc": 0.724960254372019,
+    "shape_only_auc": 0.8497448979591835,
+    "naive_attention_auc": 0.6462639109697933,
+    "within_leaf_attention_auc": 0.7957074721780604,
+    "attention_collapse": -0.14944356120826707,
+    "n_matched_pairs": 17,
+    "A_match": 0.5916955017301038,
+    "algorithm2": "Inconclusive; report both"
+   },
+   "reproduces_first_run": true
+  },
+  "PlantDoc (field)": {
+   "mask_rate": 0.9570552147239264,
+   "n_sampled": 1630,
+   "excluded_by_qc": {
+    "qc_sam_defaults": {
+     "healthy": 0.768944099378882,
+     "diseased": 0.8026490066225166
+    },
+    "qc_plus_border": {
+     "healthy": 0.7975155279503106,
+     "diseased": 0.9112582781456954
+    }
+   },
+   "border_touch_rate": {
+    "healthy": 0.3316770186335404,
+    "diseased": 0.6211920529801325
+   },
+   "primary": {
+    "subset": "all masks (pre-specified)",
+    "n": 1560,
+    "n_healthy": 805,
+    "n_diseased": 755,
+    "area_ratio_mean": 0.6918064325907151,
+    "area_ratio_mean_ci": [
+     0.6420127424535031,
+     0.7422986529571507
+    ],
+    "area_ratio_median": 0.5627154647898158,
+    "area_ratio_median_ci": [
+     0.501738131237255,
+     0.6261729665408834
+    ],
+    "area_auc": 0.6390193739459504,
+    "shape_only_auc": 0.7534120357040022,
+    "naive_attention_auc": 0.6460433548599399,
+    "within_leaf_attention_auc": 0.5725902273632489,
+    "attention_collapse": 0.07345312749669097,
+    "n_matched_pairs": 505,
+    "A_match": 0.5923066366042545,
+    "algorithm2": "Inconclusive; report both"
+   },
+   "qc_sam_defaults": {
+    "subset": "SAM-default quality filter (class-blind)",
+    "n": 335,
+    "n_healthy": 186,
+    "n_diseased": 149,
+    "area_ratio_mean": 0.5660356604192879,
+    "area_ratio_mean_ci": [
+     0.4769142641180443,
+     0.67346596615365
+    ],
+    "area_ratio_median": 0.4030037496686234,
+    "area_ratio_median_ci": [
+     0.30924298331134,
+     0.5333230977384723
+    ],
+    "area_auc": 0.7081258569675976,
+    "shape_only_auc": 0.8222597733850001,
+    "naive_attention_auc": 0.5981453417045537,
+    "within_leaf_attention_auc": 0.5417756466143564,
+    "attention_collapse": 0.05636969509019729,
+    "n_matched_pairs": 77,
+    "A_match": 0.5194805194805194,
+    "algorithm2": "Inconclusive; report both"
+   },
+   "qc_plus_border": {
+    "subset": "SAM-default filter + no border contact (class-blind)",
+    "n": 230,
+    "n_healthy": 163,
+    "n_diseased": 67,
+    "area_ratio_mean": 0.7760149203950605,
+    "area_ratio_mean_ci": [
+     0.6233598701554144,
+     0.9764732760741697
+    ],
+    "area_ratio_median": 0.6822624216837342,
+    "area_ratio_median_ci": [
+     0.43251660427673994,
+     0.9321775957995712
+    ],
+    "area_auc": 0.6063547294203827,
+    "shape_only_auc": 0.7187494796869796,
+    "naive_attention_auc": 0.5200988920428532,
+    "within_leaf_attention_auc": 0.5692702133504257,
+    "attention_collapse": -0.04917132130757251,
+    "n_matched_pairs": 49,
+    "A_match": 0.53685964181591,
+    "algorithm2": "Inconclusive; report both"
+   },
+   "species": {
+    "per_species": {
+     "apple": {
+      "n_healthy": 80,
+      "n_diseased": 102,
+      "shape_only_auc": 0.6756249999999999
+     },
+     "bell_pepper": {
+      "n_healthy": 109,
+      "n_diseased": 0,
+      "shape_only_auc": null
+     },
+     "blueberry": {
+      "n_healthy": 91,
+      "n_diseased": 0,
+      "shape_only_auc": null
+     },
+     "corn": {
+      "n_healthy": 0,
+      "n_diseased": 343,
+      "shape_only_auc": null
+     },
+     "grape": {
+      "n_healthy": 110,
+      "n_diseased": 0,
+      "shape_only_auc": null
+     },
+     "potato": {
+      "n_healthy": 0,
+      "n_diseased": 107,
+      "shape_only_auc": null
+     },
+     "raspberry": {
+      "n_healthy": 104,
+      "n_diseased": 0,
+      "shape_only_auc": null
+     },
+     "soyabean": {
+      "n_healthy": 52,
+      "n_diseased": 0,
+      "shape_only_auc": null
+     },
+     "squash": {
+      "n_healthy": 0,
+      "n_diseased": 120,
+      "shape_only_auc": null
+     },
+     "tomato": {
+      "n_healthy": 259,
+      "n_diseased": 83,
+      "shape_only_auc": 0.5644851832135569
+     }
+    },
+    "n_species_with_both": 2,
+    "shape_only_auc_same_images": 0.6031832095484423,
+    "species_only_auc": 0.6576335334456493,
+    "shape_only_auc_species_centred": 0.6488628004650832,
+    "weighted_within_species_auc": 0.603087180647016
+   },
+   "reproduces_first_run": true
+  }
+ },
+ "qc_rules": {
+  "primary": {
+   "pred_iou": 0.88,
+   "stability": 0.95
+  },
+  "secondary": "primary + no frame-edge contact",
+  "fixed": "before the run, class-blind"
+ },
+ "algorithm2_note": "printed rule: A_shape>=0.70 and collapse>=0.15 -> Confound present; \"clearly exceeds\" operationalised as A_match - A_shape >= 0.05",
+ "shape_auc_note": "max of logistic regression and random forest, 5-fold CV, as in the first run",
+ "sam": {
+  "model": "vit_b",
+  "prompt": "centre point",
+  "max_side": 1024,
+  "area": [
+   0.03,
+   0.9
+  ]
+ }
+}

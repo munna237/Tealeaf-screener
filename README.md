@@ -22,13 +22,20 @@ Dataset: **TeaLeafDiseaseBD**, Mendeley Data, doi:[10.17632/jcvxm4gh7d.3](https:
 | `notebooks/revision_v1_reproduce.ipynb` | rebuilds the 70-label pipeline from the artifacts, trains the student, exports and verifies the ONNX model |
 | `notebooks/external_test.ipynb` | external evaluation on two independently collected tea datasets (GPU, images needed) |
 | `notebooks/field_test.ipynb` | zero-shot evaluation on 2,500 field photographs from four Habiganj estates: whole frame, centre crop, SAM leaf crop (GPU, images needed) |
-| `notebooks/experiment_F_field_student.ipynb`, `notebooks/experiment_F_robustness.ipynb` | zero-label field adaptation: re-distil the student on probe-labelled field photographs (S0/S1/S2, three seeds, prevalence sensitivity) |
-| `notebooks/external_blind_transfer.ipynb` | scores the field-adapted students (S0/S1/S2, three seeds) on External datasets 1 and 2: blind transfer of the adapted model (images needed, inference only) |
-| `notebooks/regenerate_tables_8_9.ipynb` | rebuilds Table 8 (synthetic background clutter) and the shape-control column of Table 9 on the final split with the published probes (images needed) |
+| `notebooks/experiment_F_field_student.ipynb`, `notebooks/experiment_F_robustness.ipynb` | zero-label field adaptation: re-distil the student on probe-labelled field photographs (S0/S1/S2, seeds 0–2, prevalence sensitivity); seeds 3–9 in `notebooks/more_seeds.ipynb` |
+| `notebooks/external_blind_transfer.ipynb` | scores the field-adapted students (S0/S1/S2, seeds 0–2) on External datasets 1 and 2 (images needed, inference only); seeds 3–9 in `notebooks/more_seeds.ipynb` |
+| `notebooks/regenerate_tables_8_9.ipynb` | rebuilds the shape-control column of Table 10 on the final split with the published probes (its Table 9 run is superseded by `regenerate_tables_2_8_14.ipynb`; images needed) |
 | `analysis/fig_fewshot.py` | redraws Fig. 6 (label efficiency with the shape control) from `reconciled_numbers.json` and `regen_tables_8_9.json` |
 | `analysis/probe_C_cv.py` | seven-class accuracy at C = 1 / 10 / 100 and with C chosen by 5-fold CV inside the 70 labels (CPU, cached features) |
-| `notebooks/regenerate_tables_2_8_14.ipynb` | rebuilds Tables 2, 8 and 14 with the crop recipe that reproduces the cached features; times feature extraction (images needed) |
-| `analysis/field.py` | regenerates the field numbers (Section IV-Q, Table 16) from released scores and features, no images |
+| `notebooks/regenerate_tables_2_8_14.ipynb` | rebuilds Tables 2, 9 and 15 with the crop recipe that reproduces the cached features; times feature extraction (images needed) |
+| `analysis/fig_qualitative.py` | composes Fig. 9 (our capture vs the external and field photographs, Otsu vs SAM) from Fig. 1 and the contact sheets |
+| `analysis/local_threshold.py` | local calibration: sets a site's flag threshold from n labelled diseased leaves (order-statistic rule) and reports sensitivity, specificity and the cleared share over 2,000 resamples (CPU, released scores) |
+| `notebooks/more_seeds.ipynb` | extends Experiment F to 10 seeds and Experiment E to 10 draws, and repeats the blind transfer for the new seeds (GPU, resumable) |
+| `notebooks/controls_70labels.ipynb` | shape residualisation and C3 (shape-matched pairs) with the five published 70-label probes (CPU, images needed for the masks) |
+| `notebooks/sam_confound.ipynb` | the four-dataset confound diagnostic with Segment Anything masks, with a pre-declared positive control on TeaLeafDiseaseBD (GPU, images needed) |
+| `notebooks/sam_confound_followup.ipynb` | reruns the SAM diagnostic with the same sample and masks, keeps every per-image value, and adds class-blind mask QC, median area ratio, within-species shape AUC and the Algorithm 2 verdict with C3 (GPU, ~2 h; later cells CPU from the .npz) |
+| `analysis/ten_draws.py` | regenerates the ten-draw / ten-seed numbers (Tables 12, 17, 18) and Table 6 from released scores and per-image SAM values, no images |
+| `analysis/field.py` | regenerates the field numbers (Section IV-Q, Table 17) from released scores and features, no images |
 | `deploy/benchmark_onnx.py` | latency, memory, and approximate energy on any device, including Android/Termux |
 | `notebooks/original/`, `scripts/original/` | the original study code (19 notebooks, 17 scripts), copied verbatim and mapped to the paper in `scripts/original/MANIFEST.md` |
 | `tools/verify.py` | checksums + regeneration of every image-free number, with assertions |
@@ -37,7 +44,7 @@ Dataset: **TeaLeafDiseaseBD**, Mendeley Data, doi:[10.17632/jcvxm4gh7d.3](https:
 
 ```bash
 pip install numpy scipy scikit-learn matplotlib onnxruntime
-python tools/verify.py          # checksums, regenerate, assert headline numbers
+python tools/verify.py          # checksums, regenerate, assert every number marked ✓ below
 make bench                      # latency + memory of the deployed model on this machine
 ```
 
@@ -52,33 +59,40 @@ MobileNetV3-Small student is trained on them and exported to ONNX. The encoder n
 
 ## Results and where each number comes from
 
-Test split: 3,929 images (86.4% diseased), group-aware so that no near-duplicate cluster crosses train/test.
-Mean ± SD over five independent draws of the 70-label seed set.
+Numbers as printed in the revised manuscript, in the order of its tables. Test split: 3,929 images (86.4% diseased),
+group-aware so that no near-duplicate cluster crosses train/test. *Label draws* are the random choices of the 70
+labelled leaves; unless a row says otherwise, probe results use draws 0–4 (the same five probes throughout), and
+each student is paired with one label draw and one training seed. `python tools/verify.py` asserts every row
+marked ✓ without images.
 
-| Result | Value | Source | Regenerate |
-|---|---|---|---|
-| Distilled student (revision_v1, 5 seeds), binary AUC | 0.985 ± 0.006 | `E_scores_5rep.npz` | `tools/verify.py` |
-| Student accuracy / sensitivity / specificity (threshold 0.5) | 96.6% / 98.2% / 86.2% | same | `tools/verify.py` |
-| **Exported model `tea_screener.onnx`** (seed draw 1) | AUC 0.986; accuracy 96.5%; sensitivity 98.4%; specificity 84.3% (threshold 0.5) | `export_report.json` | `notebooks/revision_v1_reproduce.ipynb` |
-| Frozen probe (teacher) AUC; student − teacher | 0.985 ± 0.004; +0.0001 | `features_dinov1_crop.npz` | `tools/verify.py` |
-| Labels-only MobileNetV3 at 70 labels | 0.957 ± 0.037 (paired p = 0.13; variance ratio 6.2×, Pitman–Morgan p = 0.004) | `E_distillation_5rep.json` | `tools/verify.py` |
-| 7-class probe accuracy at 70 labels | 0.685 ± 0.018 | features | `tools/verify.py` |
-| Triage at 10% field prevalence, 95% sensitivity | 84.7% of leaves cleared, NPV 0.994 | student scores | `tools/verify.py` |
-| External zero-shot AUC, probe (EWU / Allynugger) | 0.874 ± 0.029 / 0.915 ± 0.016 | `external_results_v3.json` | `notebooks/external_test.ipynb` |
-| External specificity at the in-distribution threshold | probe 0.32 / 0.53; deployed 0.62 / 0.71 | `external_results_v3.json` | `notebooks/external_test.ipynb` |
-| Deployed model, external zero-shot AUC (EWU / Allynugger) | 0.883 / 0.889 | `external_results_v3.json` | `notebooks/external_test.ipynb` |
-| EWU after 10 / 20 local labels per class (40 draws, near-duplicates held out) | AUC 0.973 ± 0.009 / 0.983 ± 0.005 | `external_results_v3.json` | `notebooks/external_test.ipynb` |
-| Capture-bias controls, shape baselines, mask perturbation | Tables 5, 7, 14 | original scripts | `scripts/original/` |
-| Synthetic clutter (Table 8) and shape control (Table 9), final split | 0.986 / 0.979 / 0.962 / 0.941; shape 0.725 at 70 labels | `regen_tables_8_9.json` | `notebooks/regenerate_tables_8_9.ipynb` |
-| Blind transfer of the field-adapted students (Table 17) | S1 AUC 0.881 ± 0.047 / 0.931 ± 0.042 vs S0 0.795 ± 0.122 / 0.851 ± 0.118; not consistent across seeds | `external_blind_transfer.json` | `notebooks/external_blind_transfer.ipynb` |
-| Field photographs, zero-shot probe AUC (whole / centre / SAM crop) | 0.962 ± 0.017 / 0.973 ± 0.009 / 0.970 ± 0.013 | `field_results.json`, `experiment_F_results.json` | `analysis/field.py`, `notebooks/field_test.ipynb` |
-| Field photographs, deployed model AUC (whole / SAM crop) | 0.639 / 0.831 | `field_results.json` | `notebooks/field_test.ipynb` |
-| Field adaptation, held-out half, whole frame AUC: S0 (our data) / S1 (+ probe-labelled field, 0 labels) / S2 (+ 40 labels) | 0.719 ± 0.154 / 0.972 ± 0.015 / 0.989 ± 0.002 (3 seeds) | `experiment_F_robustness.json`, `experiment_F_scores.npz` | `analysis/field.py` |
-| S1 on our test split (in-distribution cost) | 0.983 ± 0.005 vs 0.986 ± 0.006 for S0 | `experiment_F_scores.npz` | `analysis/field.py` |
-| On-device latency (MediaTek Helio G92) | 26.9 ms single-thread (p95 28.5), 17.8 ms all cores (p95 20.1); +28.5 MB memory | `device_benchmark_helio_g92.json` | `deploy/benchmark_onnx.py` |
-| On-device energy (Helio G92) | 36.9 ± 1.4 mJ per leaf above idle (≈0.01 Wh per 1,000 leaves) | `device_benchmark_helio_g92.json` | `deploy/energy_adb.py` |
-| On-device latency (Unisoc T606, itel S665L) | 32.8 ms single-thread (p95 33.2), 19.1 ms all cores (p95 22.9); +29.4 MB memory | `device_benchmark_unisoc_t606.json` | `deploy/benchmark_onnx.py` |
-| On-device energy (Unisoc T606, itel S665L) | 28.3 ± 1.5 mJ per leaf above idle (5 cycles, median-idle estimator; Helio gives 37.0 by the same estimator) | `device_benchmark_unisoc_t606.json` | `deploy/energy_adb.py` |
+| Paper | Result | Value | Source (`artifacts/`) | Regenerate |
+|---|---|---|---|---|
+| Abstract, Table 12 | Distilled student, binary AUC, **ten label draws** ✓ | **0.978 ± 0.014**; 95.8% accuracy, 97.8% sensitivity, 83.0% specificity (balanced 90.4%) | `E_scores_5rep.npz` + `E_scores_rep5_9.npz` | `analysis/ten_draws.py` |
+| Table 12, Sec. IV-M | Labels-only MobileNetV3, ten draws; paired tests ✓ | 0.956 ± 0.026; gain +0.022, paired t p = 0.022, Wilcoxon p = 0.004; SD ratio 1.9×, Pitman–Morgan p = 0.075 (not significant) | same | `analysis/ten_draws.py` |
+| Table 12 | Frozen probe (teacher), ten draws ✓ | 0.980 ± 0.010; student − teacher −0.002 on average | `features_dinov1_crop.npz` | `analysis/ten_draws.py` |
+| Sec. IV-J, IV-M | Same quantities over the first five draws ✓ | student 0.985 ± 0.006 (96.6% acc.); labels-only 0.957 ± 0.037 (p = 0.13; 6.2×, p = 0.004); probe 0.985 ± 0.004 | `E_scores_5rep.npz` | `analysis/reconcile.py` |
+| Sec. IV-N | Exported model `tea_screener.onnx` (draw 1) ✓ | AUC 0.986; accuracy 96.5%; sensitivity 98.4%; specificity 84.3% | `export_report.json` | `notebooks/revision_v1_reproduce.ipynb` |
+| Table 2 | Encoders, 70-label probe ✓ | DINOv1 0.985, CLIP 0.986, DINOv2 0.979 | `regen_tables_2_8_14.json` | `notebooks/regenerate_tables_2_8_14.ipynb` |
+| Tables 5, 7 | Zero-annotation pipeline and its confound (Otsu) | 0.905; shape-only 0.834; within-leaf 0.543 | `cross_dataset_confound.json` | `scripts/original/` |
+| Table 6 | Confound diagnostic with Segment Anything ✓ | ours: shape 0.904, collapse +0.338, area ratio 1.28 (median 1.68, class-blind QC 1.57), *Confound present*; PlantVillage 0.768 / PlantDoc 0.753 *Inconclusive*; RoCoLe 0.725 / RiceLeafBD 0.615 *Pathology* | `sam_confound_per_image.npz`, `sam_confound_followup.json` | `analysis/ten_draws.py`; `notebooks/sam_confound_followup.ipynb` |
+| Table 8 | Shape controls, all labels / 70 labels ✓ (70-label column) | residualised 0.996 / 0.971; matched pairs 0.999 / 0.970 (shape on pairs 0.618 / 0.510, 510 pairs) | `controls_70labels.json` | `notebooks/controls_70labels.ipynb` |
+| Table 9 | Simulated clutter, α = 0 / 0.2 / 0.4 / 0.6 ✓ | 0.985 / 0.979 / 0.962 / 0.944 | `regen_tables_2_8_14.json` | `notebooks/regenerate_tables_2_8_14.ipynb` |
+| Table 10, Fig. 6 | Label efficiency at 70 labels; shape control ✓ | probe 0.985 ± 0.004, 7-class 0.685 ± 0.018; shape 0.725 ± 0.029 (all labels 0.792) | `reconciled_numbers.json`, `regen_tables_8_9.json` | `analysis/reconcile.py` |
+| Sec. IV-J | 7-class accuracy vs C ✓ | 0.685 / 0.743 / 0.752 at C = 1 / 10 / 100; C by CV 0.743 | `probe_C_cv.json` | `analysis/probe_C_cv.py` |
+| Table 11 | Triage at 10% prevalence, 95% sensitivity ✓ | 84.7% of leaves cleared, NPV 0.994 | student scores | `analysis/reconcile.py` |
+| Tables 13, 14 | On-device, Helio G92 / Unisoc T606 (itel S665L) | 26.9 / 32.8 ms per 224×224 crop (one thread; segmentation not included); +28.5 / +29.4 MB; 36.9 ± 1.4 / 28.3 ± 1.5 mJ per leaf | `device_benchmark_*.json` | `deploy/benchmark_onnx.py`, `deploy/energy_adb.py` |
+| Table 15 | Mask perturbation ✓ | clean 0.985; shift 0.976; jitter 0.980 | `regen_tables_2_8_14.json` | `notebooks/regenerate_tables_2_8_14.ipynb` |
+| Sec. IV-P | Within capture day / within file prefix (IMG, PXL) | 0.978–0.995 / 0.972 and 0.995 | `reconciled_numbers.json` | `analysis/reconcile.py` |
+| Table 16 | External datasets 1 / 2, zero-shot ✓ | probe 0.874 / 0.915; deployed 0.883 / 0.889 (specificity 0.62 / 0.71); 10 / 20 local labels per class on dataset 1: probe 0.973 / 0.983 | `external_results_v3.json`, `recal_dup0.95.json` | `analysis/recalibrate.py` |
+| Table 17 | Field, zero-shot probe ✓ / deployed | 0.962 (whole) / 0.973 (centre) / 0.970 (SAM); deployed 0.639 | `field_results.json` | `analysis/field.py` |
+| Table 17 | Field adaptation, **ten seeds**, whole frame ✓ | S0 0.727 ± 0.094, S1 0.974 ± 0.010, S2 0.988 ± 0.002; S1 > S0 on every seed (Wilcoxon p = 0.002); on our test split S1 0.978 vs S0 0.980 | `experiment_F_robustness.json` (seeds 0–2) + `experiment_F_seeds3_9.json` | `analysis/ten_draws.py` |
+| Table 18 | Blind transfer of the field-adapted students, **ten seeds** ✓ | S1 0.899 ± 0.073 / 0.920 ± 0.028 vs S0 0.853 ± 0.099 / 0.886 ± 0.068; S1 > S0 on 9 / 7 of 10 seeds | `external_blind_transfer_10seeds.json` | `analysis/ten_draws.py` |
+| Table 19 | Deployment decision table | collects Tables 12, 16 and 17 | — | — |
+| Fig. 9 | Capture conditions, Otsu vs SAM | `figures/fig_qualitative.png` | contact sheets | `analysis/fig_qualitative.py` |
+
+Superseded runs kept for provenance and **not** quoted in the paper: `experiment_F_robustness.json` summary and
+`external_blind_transfer.json` (three seeds; replaced by the ten-seed rows above), `sam_confound.json` (first SAM
+run, summary only), `local_threshold.py` (analysis not included in the paper).
 
 ## Using the deployed model
 
