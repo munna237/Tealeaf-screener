@@ -22,7 +22,7 @@ for line in open(os.path.join(ART, 'CHECKSUMS.sha256')):
     check(os.path.exists(p) and hashlib.sha256(open(p, 'rb').read()).hexdigest() == h, rel)
 
 print('[2] regenerate (no images needed)')
-for script, args in (('reconcile.py', [ART]), ('recalibrate.py', [ART, '0.95']), ('field.py', [ART]), ('probe_C_cv.py', [ART]), ('ten_draws.py', [ART]), ('random_seed_set.py', [ART])):
+for script, args in (('reconcile.py', [ART]), ('recalibrate.py', [ART, '0.95']), ('field.py', [ART]), ('probe_C_cv.py', [ART]), ('ten_draws.py', [ART]), ('random_seed_set.py', [ART]), ('tuned_baselines.py', [ART])):
     r = subprocess.run([sys.executable, os.path.join(ROOT, 'analysis', script), *args],
                        cwd=RES, capture_output=True, text=True)
     check(r.returncode == 0, f'{script} ran' + ('' if r.returncode == 0 else '\n' + r.stderr[-2000:]))
@@ -88,6 +88,15 @@ check(near(t6['shape_only_auc'], 0.904, 1e-3) and near(t6['collapse'], 0.338, 1e
 check(all(near(S_[k]['shape_only_auc'], v, 2e-3) for k, v in (('PlantVillage', 0.768), ('PlantDoc (field)', 0.753), ('RoCoLe', 0.725), ('RiceLeafBD', 0.615))), 'Table 6: SAM shape-only 0.768 / 0.753 / 0.725 / 0.615 on the external datasets')
 sf = json.load(open(os.path.join(ART, 'sam_confound_followup.json')))['results']
 check([sf[k]['primary']['algorithm2'] for k in ('TeaLeafDiseaseBD', 'PlantVillage', 'PlantDoc (field)', 'RoCoLe', 'RiceLeafBD')] == ['Confound present', 'Inconclusive; report both', 'Inconclusive; report both', 'Signal is pathology', 'Signal is pathology'], 'Table 6: Algorithm 2 verdicts')
+tb = json.load(open(os.path.join(RES, 'tuned_baselines.json'))); T12, TR = tb['table12'], tb['transfer']
+bt_ = json.load(open(os.path.join(ART, 'baseline_tuned.json')))
+check(near(T12['probe_distil']['mean'], td['E']['probe_distil']['mean'], 1e-6) and near(T12['labels_only_student_recipe']['mean'], td['E']['labels_only']['mean'], 1e-6), 'baseline_tuned.json uses the same ten draws as Experiment E (0.978 / 0.956 reproduce)')
+check(near(T12['ft_lr1e-4_strongaug']['mean'], 0.975, 1e-3) and near(T12['ft_lr3e-4_strongaug']['mean'], 0.976, 1e-3) and T12['ft_lr1e-4_strongaug']['distil_minus_ft']['t_p'] > 0.5 and T12['ft_lr3e-4_strongaug']['distil_minus_ft']['t_p'] > 0.5, 'Table 12: tuned fine-tunes 0.975 / 0.976, not different from probe + distillation (t p = 0.53 / 0.65)')
+check(near(T12['ft_lr1e-4_strongaug']['pitman_morgan_p'], 0.16, 1e-2) and near(T12['ft_lr3e-4_strongaug']['pitman_morgan_p'], 0.65, 1e-2), 'Sec. IV-M: no variance advantage over tuned fine-tunes (Pitman-Morgan p = 0.16 / 0.65)')
+check(near(T12['probe_imagenet_mobilenet_v3_small']['mean'], 0.960, 1e-3) and near(T12['probe_imagenet_resnet50']['mean'], 0.961, 1e-3) and T12['all_four_added_survive'] and all(T12[k]['dino_minus_imagenet']['wins'] == 10 for k in ('probe_imagenet_mobilenet_v3_small', 'probe_imagenet_resnet50')), 'Table 12 / Table 2 note: DINO probe beats ImageNet probes (0.960 / 0.961) on 10/10 draws, survives Bonferroni (0.0125)')
+check(near(TR['ft_lr1e-4_strongaug']['whole']['mean'], 0.857, 1e-3) and near(TR['ft_lr3e-4_strongaug']['whole']['mean'], 0.836, 1e-3) and all(TR[k][v]['S1_minus_ft']['wins'] == 10 for k in TR for v in ('whole', 'centre')), 'Table 17: tuned fine-tunes on the field 0.857 / 0.836 (whole); S1 better on 10/10 draws, whole and centre')
+check(near(TR['ft_lr1e-4_strongaug']['External_1']['mean'], 0.890, 1e-3) and near(TR['ft_lr3e-4_strongaug']['External_2']['mean'], 0.905, 1e-3) and all(TR[k][e]['S1_minus_ft']['t_p'] > 0.05 for k in TR for e in ('External_1', 'External_2')), 'Table 18: tuned fine-tunes 0.890 / 0.912 and 0.861 / 0.905 externally; no significant difference from S1')
+check(max(TR[k]['tealeaf_max_abs_diff_vs_table12'] for k in TR) < 0.006, 'Table 17 note: retrained fine-tunes within 0.006 of Table 12 on our test split')
 rs = json.load(open(os.path.join(RES, 'random_seed_set.json')))
 check(near(rs['random_100draws']['auc_mean'], 0.981, 1e-3) and near(rs['random_100draws']['auc_p5'], 0.964, 1e-3) and near(rs['stratified_10draws']['auc_mean'], 0.980, 1e-3), 'Sec. IV-N: 70 random (unstratified) labels AUC 0.981, 5th pct 0.964, vs stratified 0.980')
 c7 = json.load(open(os.path.join(ART, 'controls_70labels.json')))

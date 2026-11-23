@@ -34,6 +34,8 @@ Dataset: **TeaLeafDiseaseBD**, Mendeley Data, doi:[10.17632/jcvxm4gh7d.3](https:
 | `notebooks/controls_70labels.ipynb` | shape residualisation and C3 (shape-matched pairs) with the five published 70-label probes (CPU, images needed for the masks) |
 | `notebooks/sam_confound.ipynb` | the four-dataset confound diagnostic with Segment Anything masks, with a pre-declared positive control on TeaLeafDiseaseBD (GPU, images needed) |
 | `notebooks/sam_confound_followup.ipynb` | reruns the SAM diagnostic with the same sample and masks, keeps every per-image value, and adds class-blind mask QC, median area ratio, within-species shape AUC and the Algorithm 2 verdict with C3 (GPU, ~2 h; later cells CPU from the .npz) |
+| `notebooks/baseline_tuned.ipynb`, `notebooks/baseline_transfer.ipynb` | tuned supervised fine-tunes and ImageNet linear probes on the ten label draws of Table 12, and their transfer to the field and external photographs (GPU, images needed) |
+| `analysis/tuned_baselines.py` | paired tests for those baselines (Table 12, Table 2 note, Tables 17–18), from the released results, no images |
 | `analysis/ten_draws.py` | regenerates the ten-draw / ten-seed numbers (Tables 12, 17, 18) and Table 6 from released scores and per-image SAM values, no images |
 | `analysis/field.py` | regenerates the field numbers (Section IV-Q, Table 17) from released scores and features, no images |
 | `deploy/benchmark_onnx.py` | latency, memory, and approximate energy on any device, including Android/Termux |
@@ -68,8 +70,11 @@ marked ✓ without images.
 | Paper | Result | Value | Source (`artifacts/`) | Regenerate |
 |---|---|---|---|---|
 | Abstract, Table 12 | Distilled student, binary AUC, **ten label draws** ✓ | **0.978 ± 0.014**; 95.8% accuracy, 97.8% sensitivity, 83.0% specificity (balanced 90.4%) | `E_scores_5rep.npz` + `E_scores_rep5_9.npz` | `analysis/ten_draws.py` |
-| Table 12, Sec. IV-M | Labels-only MobileNetV3, ten draws; paired tests ✓ | 0.956 ± 0.026; gain +0.022, paired t p = 0.022, Wilcoxon p = 0.004; SD ratio 1.9×, Pitman–Morgan p = 0.075 (not significant) | same | `analysis/ten_draws.py` |
+| Table 12, Sec. IV-M | Labels-only MobileNetV3, student recipe (Adam, lr 1e-3, 30 epochs), ten draws; paired tests ✓ | 0.956 ± 0.026; gain +0.022, paired t p = 0.022, Wilcoxon p = 0.004; SD ratio 1.9×, Pitman–Morgan p = 0.075 (not significant) | same | `analysis/ten_draws.py` |
 | Table 12 | Frozen probe (teacher), ten draws ✓ | 0.980 ± 0.010; student − teacher −0.002 on average | `features_dinov1_crop.npz` | `analysis/ten_draws.py` |
+| Table 12, Sec. IV-M | Tuned supervised fine-tunes (AdamW, 150 epochs, strong aug.; lr 1e-4 / 3e-4), same ten draws ✓ | 0.975 ± 0.008 / 0.976 ± 0.012; vs probe + distillation +0.003 / +0.002, paired t p = 0.53 / 0.65, Wilcoxon p = 0.62 / 1.0; Pitman–Morgan p = 0.16 / 0.65 | `baseline_tuned.json`, `baseline_tuned_scores.npz` | `notebooks/baseline_tuned.ipynb` (GPU); `analysis/tuned_baselines.py` |
+| Table 12, Table 2 note | Linear probes on frozen ImageNet MobileNetV3-Small / ResNet-50, same ten draws ✓ | 0.960 ± 0.022 / 0.961 ± 0.006; DINO probe ahead by 0.021 / 0.020 on 10/10 draws (t p = 0.005 / <0.001, Wilcoxon p = 0.002; survives Bonferroni at 0.0125) | same | same |
+| Tables 17, 18, Sec. IV-Q | Tuned fine-tunes on the field and external datasets ✓ | field held-out half 0.857 / 0.836 (whole), 0.916 / 0.910 (centre); S1 better on 10/10 draws (Wilcoxon p = 0.002); External 1 0.890 / 0.912, External 2 0.861 / 0.905, no significant difference from S1 | `baseline_transfer.json`, `baseline_transfer_scores.npz` | `notebooks/baseline_transfer.ipynb` (GPU, images needed); `analysis/tuned_baselines.py` |
 | Sec. IV-J, IV-M | Same quantities over the first five draws ✓ | student 0.985 ± 0.006 (96.6% acc.); labels-only 0.957 ± 0.037 (p = 0.13; 6.2×, p = 0.004); probe 0.985 ± 0.004 | `E_scores_5rep.npz` | `analysis/reconcile.py` |
 | Sec. IV-N | Exported model `tea_screener.onnx` (draw 1) ✓ | AUC 0.986; accuracy 96.5%; sensitivity 98.4%; specificity 84.3% | `export_report.json` | `notebooks/revision_v1_reproduce.ipynb` |
 | Table 2 | Encoders, 70-label probe ✓ | DINOv1 0.985, CLIP 0.986, DINOv2 0.979 | `regen_tables_2_8_14.json` | `notebooks/regenerate_tables_2_8_14.ipynb` |

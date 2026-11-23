@@ -35,6 +35,8 @@ redistributing them, and cite the original datasets.
 | `E_distillation_10rep.json`, `E_scores_rep5_9.npz` | Experiment E draws 5–9 (labels-only and probe + distillation students) and the ten-draw statistics (Table 12) | `notebooks/more_seeds.ipynb` |
 | `experiment_F_seeds3_9.json`, `experiment_F_scores_seeds3_9.npz`, `experiment_F_summary_10seeds.json` | field adaptation S0/S1/S2 seeds 3–9 and the ten-seed summary (Table 17) | `notebooks/more_seeds.ipynb` |
 | `external_blind_transfer_10seeds.json` | blind transfer of the thirty field-adapted students to External datasets 1 and 2 (Table 18) | `notebooks/more_seeds.ipynb` |
+| `baseline_tuned.json`, `baseline_tuned_scores.npz` | tuned supervised fine-tunes (lr 1e-4, 3e-4) and frozen ImageNet linear probes on the ten label draws of Table 12; per-draw AUC and test scores | `notebooks/baseline_tuned.ipynb` |
+| `baseline_transfer.json`, `baseline_transfer_scores.npz` | the same fine-tunes, retrained, scored on the field photographs and External datasets 1 and 2 (Tables 17, 18) | `notebooks/baseline_transfer.ipynb` |
 | `controls_70labels.json` | C2 and C3 with the five 70-label probes (Table 8, 70-label column) | `notebooks/controls_70labels.ipynb` |
 | `sam_confound.json` | first Segment Anything run of the cross-dataset diagnostic (summary only) | `notebooks/sam_confound.ipynb` |
 | `sam_confound_followup.json`, `sam_confound_per_image.npz` | Table 6: same sample and masks, per-image values, QC, species, Algorithm 2 verdicts; contact sheets in `figures/sam_contact/` | `notebooks/sam_confound_followup.ipynb` |
